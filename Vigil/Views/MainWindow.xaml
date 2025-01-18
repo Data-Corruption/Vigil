@@ -10,7 +10,8 @@
         Background="Transparent"
         WindowStartupLocation="CenterScreen"
         Topmost="True">
-  <Grid MouseDown="Window_MouseDown" Margin="10">
+  <Grid MouseDown="Window_MouseDown"
+      Margin="10">
     <!--
     <TextBox Name="OutputTextBox"
              IsReadOnly="True"
@@ -21,6 +22,9 @@
              FontSize="12"
              Margin="10"/>
              -->
-    <Label Content="System Monitor" FontSize="16" FontWeight="Bold" Background="Transparent"/>
+    <Label Content="System Monitor"
+        FontSize="16"
+        FontWeight="Bold"
+        Background="Transparent"/>
   </Grid>
 </Window>
