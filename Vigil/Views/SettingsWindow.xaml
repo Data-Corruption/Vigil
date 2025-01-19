@@ -10,21 +10,31 @@
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
     <Label Grid.Row="0"
-        Content="Settings"
-        FontSize="16"
-        FontWeight="Bold"/>
-    <Button Grid.Row="1"
-        Content="Exit"
-        Width="100"
-        Height="30"
-        HorizontalAlignment="Right"
-        Margin="0,20,0,0"
-        Click="ExitButton_Click"/>
-    <TextBox Grid.Row="2"
-        Name="OutputTextBox"
+           Content="Settings"
+           FontSize="16"
+           FontWeight="Bold"/>
+
+    <StackPanel Grid.Row="1"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                Margin="0,20,0,0">
+      <Button Content="Set position one"
+              Width="100"
+              Height="30"
+              Margin="0,0,10,0"
+              Click="SetPosOne_Click"/>
+      <Button Content="Set position two"
+              Width="100"
+              Height="30"
+              Click="SetPosTwo_Click"/>
+    </StackPanel>
+
+    <TextBox Grid.Row="3"
+             Name="OutputTextBox"
              IsReadOnly="True"
              TextWrapping="Wrap"
              VerticalScrollBarVisibility="Auto"

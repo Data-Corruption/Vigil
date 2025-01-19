@@ -11,7 +11,7 @@ namespace Vigil.Views
     private readonly ConfigManager<ConfigData> _configManager;
     private readonly HardwareMonitor _hardwareMonitor;
     private readonly DispatcherTimer _timer;
-    private SettingsWindow? _settingsWindow;
+    private bool _isPosOneSet = true;
 
     public MainWindow(ConfigManager<ConfigData> configManager, HardwareMonitor hardwareMonitor)
     {
@@ -20,8 +20,8 @@ namespace Vigil.Views
       _hardwareMonitor = hardwareMonitor;
 
       // Set the window position
-      SetWindowPosition();
-
+      ConfigData configCopy = _configManager.GetConfig();
+      SetWindowPos(configCopy.MainWindowPosOne);
       Console.WriteLine($"Window position: {this.Left}, {this.Top}");
 
       // Initialize and start the timer to update UI every second
@@ -33,24 +33,23 @@ namespace Vigil.Views
       _timer.Start();
     }
 
-    private void SetWindowPosition()
+    private void SetWindowPos(System.Windows.Point point)
     {
-      ConfigData configCopy = _configManager.GetConfig();
-      if (configCopy.MainWindowPosition.X != 0 || configCopy.MainWindowPosition.Y != 0)
+      if (point.X != 0 || point.Y != 0)
       {
         // Check if the saved position is on any connected screen
         bool isOnScreen = Screen.AllScreens.Any(screen =>
             screen.WorkingArea.Contains(new System.Drawing.Point(
-                (int)configCopy.MainWindowPosition.X,
-                (int)configCopy.MainWindowPosition.Y
+                (int)point.X,
+                (int)point.Y
             ))
         );
 
         if (isOnScreen)
         {
           this.WindowStartupLocation = WindowStartupLocation.Manual;
-          this.Left = configCopy.MainWindowPosition.X;
-          this.Top = configCopy.MainWindowPosition.Y;
+          this.Left = point.X;
+          this.Top = point.Y;
         }
         else
         {
@@ -64,32 +63,39 @@ namespace Vigil.Views
       }
     }
 
-    private void Draw(object sender, EventArgs e)
+    private void Draw(object? sender, EventArgs e)
     {
       // OutputTextBox.Text = _hardwareMonitor.GetLatestData();
     }
 
     private void Window_MouseDown(object sender, MouseButtonEventArgs e)
     {
-      if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+      if (e.ChangedButton == MouseButton.Left)
       {
-        if (_settingsWindow != null)
+        // if shift or control is pressed, toggle the window position. Otherwise, drag the window
+        if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) ||
+            Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
         {
-          return;
+          var configCopy = _configManager.GetConfig();
+          if (_isPosOneSet)
+          {
+            SetWindowPos(configCopy.MainWindowPosTwo);
+            _isPosOneSet = false;
+
+          }
+          else
+          {
+            SetWindowPos(configCopy.MainWindowPosOne);
+            _isPosOneSet = true;
+          }
         }
-        _settingsWindow = new SettingsWindow(_hardwareMonitor);
-        _settingsWindow.Owner = this;
-        _settingsWindow.Closed += (s, e) => _settingsWindow = null;
-        _settingsWindow.Show();
-      }
-      else
-      {
-        if (e.ChangedButton == MouseButton.Left)
+        else
         {
           this.DragMove();
-          _configManager.UpdateConfig(cfg => {
-            cfg.MainWindowPosition = new System.Windows.Point(this.Left, this.Top);
-            });
+          _configManager.UpdateConfig(cfg =>
+          {
+            cfg.MainWindowCurrentPos = new System.Windows.Point(this.Left, this.Top);
+          });
         }
       }
     }

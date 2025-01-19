@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.3" />
+    <EmbeddedResource Include="Resources\vigil.ico" />
   </ItemGroup>
 
 </Project>
