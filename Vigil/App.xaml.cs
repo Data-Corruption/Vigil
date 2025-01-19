@@ -57,6 +57,11 @@ namespace Vigil
       {
         if (_settingsWindow == null)
         {
+          if (_configManager == null || _hardwareMonitor == null)
+          {
+            Console.WriteLine("ConfigManager or HardwareMonitor is null.");
+            return;
+          }
           _settingsWindow = new SettingsWindow(_configManager, _hardwareMonitor);
           _settingsWindow.Closed += (sender, e) => _settingsWindow = null;
           _settingsWindow.Show();

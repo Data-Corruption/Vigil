@@ -31,19 +31,18 @@ namespace Vigil.Views
       {
         return;
       }
-      Console.WriteLine("Draw");
       OutputTextBox.Text = _hardwareMonitor.GetLatestData();
     }
 
     private void SetPosOne_Click(object sender, RoutedEventArgs e)
     {
-      Console.WriteLine("SetPosOne_Click");
+      Console.WriteLine($"Setting position one to {_configManager.GetConfig().MainWindowCurrentPos}");
       _configManager.UpdateConfig(cfg => { cfg.MainWindowPosOne = cfg.MainWindowCurrentPos; });
     }
 
     private void SetPosTwo_Click(object sender, RoutedEventArgs e)
     {
-      Console.WriteLine("SetPosTwo_Click");
+      Console.WriteLine($"Setting position two to {_configManager.GetConfig().MainWindowCurrentPos}");
       _configManager.UpdateConfig(cfg => { cfg.MainWindowPosTwo = cfg.MainWindowCurrentPos; });
     }
 

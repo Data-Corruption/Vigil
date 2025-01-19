@@ -28,7 +28,6 @@ namespace Vigil.Reminder
     {
       lock (_lock)
       {
-        Console.WriteLine("The Elapsed event was raised at {0}", e.SignalTime);
         _nextRun = DateTime.Now.AddMilliseconds(_interval);
         _reminderWindow?.Dispatcher.Invoke(() => _reminderWindow.Show());
       }

@@ -3,6 +3,8 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Vigil.Config;
 using Vigil.Hardware;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
 
 namespace Vigil.Views
 {
@@ -19,10 +21,9 @@ namespace Vigil.Views
       _configManager = configManager;
       _hardwareMonitor = hardwareMonitor;
 
-      // Set the window position
+      // Set the window position to the saved position
       ConfigData configCopy = _configManager.GetConfig();
-      SetWindowPos(configCopy.MainWindowPosOne);
-      Console.WriteLine($"Window position: {this.Left}, {this.Top}");
+      this.Loaded += (s, e) => SetPos(configCopy.MainWindowPosOne);
 
       // Initialize and start the timer to update UI every second
       _timer = new DispatcherTimer
@@ -33,34 +34,58 @@ namespace Vigil.Views
       _timer.Start();
     }
 
-    private void SetWindowPos(System.Windows.Point point)
-    {
-      if (point.X != 0 || point.Y != 0)
-      {
-        // Check if the saved position is on any connected screen
-        bool isOnScreen = Screen.AllScreens.Any(screen =>
-            screen.WorkingArea.Contains(new System.Drawing.Point(
-                (int)point.X,
-                (int)point.Y
-            ))
-        );
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter,
+    int X, int Y, int cx, int cy, uint uFlags);
 
-        if (isOnScreen)
-        {
-          this.WindowStartupLocation = WindowStartupLocation.Manual;
-          this.Left = point.X;
-          this.Top = point.Y;
-        }
-        else
-        {
-          // Default to center screen if saved position is not on any screen
-          this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-        }
-      }
-      else
+    private const uint SWP_NOZORDER = 0x0004;
+    private const uint SWP_NOSIZE = 0x0001;
+
+    [DllImport("user32.dll")]
+    private static extern IntPtr MonitorFromPoint(POINT pt, uint dwFlags);
+
+    [DllImport("Shcore.dll")]
+    private static extern int GetDpiForMonitor(IntPtr hmonitor, int dpiType, out uint dpiX, out uint dpiY);
+
+    private const uint MONITOR_DEFAULTTONEAREST = 0x00000002;
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct POINT
+    {
+      public int X;
+      public int Y;
+
+      public POINT(int x, int y)
       {
-        this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+        X = x;
+        Y = y;
       }
+    }
+
+    private void SetPos(System.Windows.Point wpfPos)
+    {
+      var source = (HwndSource)PresentationSource.FromVisual(this);
+      if (source == null) return;
+
+      // Convert WPF position to a POINT structure
+      var targetPoint = new POINT((int)wpfPos.X, (int)wpfPos.Y);
+
+      // Get the monitor for the target position
+      IntPtr monitor = MonitorFromPoint(targetPoint, MONITOR_DEFAULTTONEAREST);
+
+      // Get DPI for the monitor
+      GetDpiForMonitor(monitor, 0, out uint dpiX, out uint dpiY);
+
+      // Calculate scaling factor
+      double scalingFactorX = dpiX / 96.0; // Default DPI is 96
+      double scalingFactorY = dpiY / 96.0;
+
+      // Adjust position to device pixels
+      int deviceX = (int)(wpfPos.X * scalingFactorX);
+      int deviceY = (int)(wpfPos.Y * scalingFactorY);
+
+      Console.WriteLine($"Setting window position to {deviceX}, {deviceY}");
+      SetWindowPos(source.Handle, IntPtr.Zero, deviceX, deviceY, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
     }
 
     private void Draw(object? sender, EventArgs e)
@@ -79,22 +104,23 @@ namespace Vigil.Views
           var configCopy = _configManager.GetConfig();
           if (_isPosOneSet)
           {
-            SetWindowPos(configCopy.MainWindowPosTwo);
+            SetPos(configCopy.MainWindowPosTwo);
             _isPosOneSet = false;
 
           }
           else
           {
-            SetWindowPos(configCopy.MainWindowPosOne);
+            SetPos(configCopy.MainWindowPosOne);
             _isPosOneSet = true;
           }
         }
         else
         {
           this.DragMove();
+          Console.WriteLine($"Window position: {Left}, {Top}");
           _configManager.UpdateConfig(cfg =>
           {
-            cfg.MainWindowCurrentPos = new System.Windows.Point(this.Left, this.Top);
+            cfg.MainWindowCurrentPos = new System.Windows.Point(Left, Top);
           });
         }
       }
