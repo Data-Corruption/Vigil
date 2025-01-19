@@ -46,12 +46,21 @@ namespace Vigil.Config
       _usedDefaultConfig = !File.Exists(_path);
       if (_usedDefaultConfig)
       {
-      _configData = defaultConfig;
-      SaveConfig();
+        _configData = defaultConfig;
+        SaveConfig();
       }
       else
       {
-      LoadConfig();
+        try
+        {
+          LoadConfig();
+        }
+        catch
+        {
+          _configData = defaultConfig;
+          _usedDefaultConfig = true;
+          SaveConfig();
+        }
       }
     }
 
@@ -118,6 +127,11 @@ namespace Vigil.Config
 
     private void SaveConfig()
     {
+      var directory = Path.GetDirectoryName(_path);
+      if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+      {
+        Directory.CreateDirectory(directory);
+      }
       var json = JsonSerializer.Serialize(_configData);
       File.WriteAllText(_path, json);
     }
