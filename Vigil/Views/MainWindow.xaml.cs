@@ -46,7 +46,11 @@ namespace Vigil.Views
       else
       {
         if (e.ChangedButton == MouseButton.Left)
+        {
           this.DragMove();
+          Point position = this.PointToScreen(new Point(0, 0));
+          Console.WriteLine($"New position: {position.X}, {position.Y}");
+        }
       }
     }
   }

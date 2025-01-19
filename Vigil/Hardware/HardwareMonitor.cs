@@ -8,8 +8,7 @@ namespace Vigil.Hardware
     private Computer? _computer;
     private readonly object _lock = new object();
 
-    public void Initialize()
-    {
+    public HardwareMonitor() {
       // Initialize hardware interfaces, setup sensors, etc.
       Console.WriteLine("Hardware Monitor Initialized.");
       _computer = new Computer

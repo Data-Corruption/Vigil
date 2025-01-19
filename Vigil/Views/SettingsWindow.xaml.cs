@@ -13,6 +13,7 @@ namespace Vigil.Views
     {
       InitializeComponent();
       _hardwareMonitor = hardwareMonitor;
+      OutputTextBox.Text = _hardwareMonitor.GetLatestData();
 
       // Initialize and start the timer to update UI every second
       _timer = new DispatcherTimer
@@ -25,7 +26,7 @@ namespace Vigil.Views
 
     private void Draw(object sender, EventArgs e)
     {
-      OutputTextBox.Text = _hardwareMonitor.GetLatestData();
+      // OutputTextBox.Text = _hardwareMonitor.GetLatestData();
     }
 
     private void ExitButton_Click(object sender, RoutedEventArgs e)
