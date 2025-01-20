@@ -21,15 +21,29 @@ namespace Vigil.Views
     private void SetPosOne_Click(object sender, RoutedEventArgs e)
     {
       if (_services == null) { Console.WriteLine("Error: main window services are null"); return; }
-      Console.WriteLine($"Setting position one to {_services.ConfigManager.GetConfig().MainWindowCurrentPos}");
-      _services.ConfigManager.UpdateConfig(cfg => { cfg.MainWindowPosOne = cfg.MainWindowCurrentPos; });
+      var mainWindowCurrentPos = _services.MainWindow.GetCurrentPosition();
+      Console.WriteLine($"Setting position one to {mainWindowCurrentPos}");
+      _services.ConfigManager.UpdateConfig(cfg => { cfg.MainWindowPosOne = mainWindowCurrentPos; });
     }
 
     private void SetPosTwo_Click(object sender, RoutedEventArgs e)
     {
       if (_services == null) { Console.WriteLine("Error: main window services are null"); return; }
-      Console.WriteLine($"Setting position two to {_services.ConfigManager.GetConfig().MainWindowCurrentPos}");
-      _services.ConfigManager.UpdateConfig(cfg => { cfg.MainWindowPosTwo = cfg.MainWindowCurrentPos; });
+      var mainWindowCurrentPos = _services.MainWindow.GetCurrentPosition();
+      Console.WriteLine($"Setting position two to {mainWindowCurrentPos}");
+      _services.ConfigManager.UpdateConfig(cfg => { cfg.MainWindowPosTwo = mainWindowCurrentPos; });
+    }
+
+    private void SetReminderSizeAndPosition_Click(object sender, RoutedEventArgs e)
+    {
+      if (_services == null) { Console.WriteLine("Error: main window services are null"); return; }
+      var reminderWindowCurrentPos = _services.ReminderWindow.GetCurrentPosition();
+      var reminderWindowCurrentSize = _services.ReminderWindow.GetCurrentSize();
+      Console.WriteLine($"Setting reminder window size to {reminderWindowCurrentSize} and position to {reminderWindowCurrentPos}");
+      _services.ConfigManager.UpdateConfig(cfg => {
+        cfg.ReminderWindowSize = reminderWindowCurrentSize;
+        cfg.ReminderWindowPos = reminderWindowCurrentPos;
+      });
     }
 
     private void ExitButton_Click(object sender, RoutedEventArgs e)

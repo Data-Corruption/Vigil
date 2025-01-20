@@ -1,11 +1,11 @@
 <local:VigilWindow x:Class="Vigil.Views.SettingsWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:Vigil.Views"
-        Title="System Monitor"
-        Height="400"
-        Width="600"
-        WindowStartupLocation="CenterScreen">
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:local="clr-namespace:Vigil.Views"
+                   Title="System Monitor"
+                   Height="400"
+                   Width="600"
+                   WindowStartupLocation="CenterScreen">
   <Grid Margin="10">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
@@ -17,20 +17,24 @@
            Content="Settings"
            FontSize="16"
            FontWeight="Bold"/>
-
     <StackPanel Grid.Row="1"
                 Orientation="Horizontal"
-                HorizontalAlignment="Right"
-                Margin="0,20,0,0">
+                HorizontalAlignment="Left"
+                Margin="0,10,0,0">
       <Button Content="Set position one"
-              Width="100"
+              Width="150"
               Height="30"
               Margin="0,0,10,0"
               Click="SetPosOne_Click"/>
       <Button Content="Set position two"
-              Width="100"
+              Width="150"
               Height="30"
+              Margin="0,0,10,0"
               Click="SetPosTwo_Click"/>
+      <Button Content="Set Reminder size and position"
+              Width="200"
+              Height="30"
+              Click="SetReminderSizeAndPosition_Click"/>
     </StackPanel>
 
     <TextBox Grid.Row="3"

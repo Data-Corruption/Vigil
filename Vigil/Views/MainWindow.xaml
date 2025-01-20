@@ -1,13 +1,13 @@
 <local:VigilWindow x:Class="Vigil.Views.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:Vigil.Views"
-        Title="System Monitor"
-        Height="400"
-        Width="600"
-        Topmost="True">
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:local="clr-namespace:Vigil.Views"
+                   Title="System Monitor"
+                   Height="400"
+                   Width="600"
+                   Topmost="True">
   <Grid MouseDown="Window_MouseDown"
-      Margin="10">
+        Margin="10">
     <!--
 
 WindowStyle="None"
@@ -24,8 +24,22 @@ WindowStyle="None"
              Margin="10"/>
              -->
     <Label Content="System Monitor"
-        FontSize="16"
-        FontWeight="Bold"
-        Background="Transparent"/>
+           FontSize="16"
+           FontWeight="Bold"
+           Background="Transparent"/>
+
+    <Border x:Name="SquareBorder"
+      HorizontalAlignment="Center"
+      VerticalAlignment="Center"
+      Width="20"
+      Height="20"
+      Background="Transparent"
+      BorderBrush="Black"
+      BorderThickness="1"
+      MouseEnter="OnMouseEnter"
+      MouseLeave="OnMouseLeave">
+      <Image x:Name="BitmapDisplay" Width="20" Height="20" />
+    </Border>
+
   </Grid>
 </local:VigilWindow>

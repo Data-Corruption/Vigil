@@ -48,8 +48,12 @@ namespace Vigil
         if (_vigilServices.SettingsWindow == null)
         {
           _vigilServices.SettingsWindow = new SettingsWindow(_vigilServices, TimeSpan.FromSeconds(1));
-          _vigilServices.SettingsWindow.Closed += (sender, e) => _vigilServices.SettingsWindow = null;
+          _vigilServices.SettingsWindow.Closed += (sender, e) => {
+            _vigilServices.ReminderManager.DebugOff();
+            _vigilServices.SettingsWindow = null;
+          };
           _vigilServices.SettingsWindow.Show();
+          _vigilServices.ReminderManager.DebugOn();
         }
         else
         {
