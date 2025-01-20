@@ -10,40 +10,31 @@ namespace Vigil
 {
   public partial class App : System.Windows.Application
   {
-    private ConfigManager<ConfigData>? _configManager;
-    private HardwareMonitor? _hardwareMonitor;
-    private ReminderManager? _reminderManager;
-    private ContextMenuStrip? _contextMenu;
-    private NotifyIcon? _notifyIcon;
-
-    private MainWindow? _mainWindow;
-    private SettingsWindow? _settingsWindow;
+    private VigilServices? _vigilServices;
 
     private void Application_Startup(object sender, StartupEventArgs e)
     {
       string localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
       string localConfigPath = Path.Combine(localAppDataPath, "Vigil", "config.json");
-      _configManager = new ConfigManager<ConfigData>(localConfigPath, new ConfigData());
-      _hardwareMonitor = new HardwareMonitor();
-      _reminderManager = new ReminderManager(8.0);
+      _vigilServices = new VigilServices(localConfigPath);
       // Create and show the main window
-      _mainWindow = new MainWindow(_configManager, _hardwareMonitor);
-      _mainWindow.Show();
+      _vigilServices.MainWindow.Show();
       CreateSystemTrayItems();
     }
 
     private void CreateSystemTrayItems()
     {
+      if (_vigilServices == null) return;
+
       // Create notification icon
-      _notifyIcon = new NotifyIcon();
-      _notifyIcon.Text = "Vigil";
+      _vigilServices.NotifyIcon.Text = "Vigil";
       // Load embedded icon
       Stream? iconStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Vigil.Resources.vigil.ico");
       if (iconStream != null)
       {
         using (iconStream)
         {
-          _notifyIcon.Icon = new Icon(iconStream);
+          _vigilServices.NotifyIcon.Icon = new Icon(iconStream);
         }
       }
       else
@@ -52,48 +43,69 @@ namespace Vigil
         return;
       }
       // Create context menu
-      _contextMenu = new ContextMenuStrip();
-      _contextMenu.Items.Add("Settings", null, (sender, e) =>
+      _vigilServices.ContextMenu.Items.Add("Settings", null, (sender, e) =>
       {
-        if (_settingsWindow == null)
+        if (_vigilServices.SettingsWindow == null)
         {
-          if (_configManager == null || _hardwareMonitor == null)
-          {
-            Console.WriteLine("ConfigManager or HardwareMonitor is null.");
-            return;
-          }
-          _settingsWindow = new SettingsWindow(_configManager, _hardwareMonitor);
-          _settingsWindow.Closed += (sender, e) => _settingsWindow = null;
-          _settingsWindow.Show();
+          _vigilServices.SettingsWindow = new SettingsWindow(_vigilServices, TimeSpan.FromSeconds(1));
+          _vigilServices.SettingsWindow.Closed += (sender, e) => _vigilServices.SettingsWindow = null;
+          _vigilServices.SettingsWindow.Show();
         }
         else
         {
-          _settingsWindow.Activate();
+          _vigilServices.SettingsWindow.Activate();
         }
       });
-      _contextMenu.Items.Add("Pause Reminder", null, (sender, e) =>
+      _vigilServices.ContextMenu.Items.Add("Pause Reminder", null, (sender, e) =>
       {
-        _reminderManager?.Pause();
+        _vigilServices.ReminderManager.Pause();
       });
-      _contextMenu.Items.Add("Resume Reminder", null, (sender, e) =>
+      _vigilServices.ContextMenu.Items.Add("Resume Reminder", null, (sender, e) =>
       {
-        _reminderManager?.Resume();
+        _vigilServices.ReminderManager.Resume();
       });
-      _contextMenu.Items.Add("Exit", null, (sender, e) =>
+      _vigilServices.ContextMenu.Items.Add("Exit", null, (sender, e) =>
       {
         Current.Shutdown();
       });
-      _notifyIcon.ContextMenuStrip = _contextMenu;
-      _notifyIcon.Visible = true;
+      _vigilServices.NotifyIcon.ContextMenuStrip = _vigilServices.ContextMenu;
+      _vigilServices.NotifyIcon.Visible = true;
     }
 
     protected override void OnExit(ExitEventArgs e)
     {
-      // Ensure monitoring is stopped when the application exits
-      _hardwareMonitor?.Cleanup();
-      _reminderManager?.Pause();
-      _notifyIcon?.Dispose();
+      if (_vigilServices != null)
+      {
+        // Ensure monitoring is stopped when the application exits
+        _vigilServices.HardwareMonitor.Cleanup();
+        _vigilServices.ReminderManager.Pause();
+        _vigilServices.NotifyIcon.Dispose();
+      }
       base.OnExit(e);
+    }
+  }
+
+  public class VigilServices
+  {
+    public ConfigManager<ConfigData> ConfigManager { get; }
+    public ReminderManager ReminderManager { get; }
+    public HardwareMonitor HardwareMonitor { get; }
+    public ContextMenuStrip ContextMenu { get; }
+    public NotifyIcon NotifyIcon { get; }
+
+    public MainWindow? MainWindow { get; }
+    public SettingsWindow? SettingsWindow { get; set; }
+    public ReminderWindow? ReminderWindow { get; set; }
+
+    public VigilServices(string configPath)
+    {
+      ConfigManager = new ConfigManager<ConfigData>(configPath, new ConfigData());
+      ReminderManager = new ReminderManager(this, ConfigManager.GetConfig().ReminderInterval);
+      HardwareMonitor = new HardwareMonitor();
+      ContextMenu = new ContextMenuStrip();
+      NotifyIcon = new NotifyIcon();
+      MainWindow = new MainWindow(this, TimeSpan.FromSeconds(1));
+      ReminderWindow = new ReminderWindow(this, TimeSpan.FromSeconds(1));
     }
   }
 }

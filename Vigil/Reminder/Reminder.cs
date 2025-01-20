@@ -5,36 +5,43 @@ namespace Vigil.Reminder
 {
   public class ReminderManager
   {
+    private VigilServices? _services;
     private readonly object _lock = new object();
     private System.Timers.Timer _timer;
     private double _interval;
     private DateTime _nextRun;
     private bool _isPaused;
-    private ReminderWindow? _reminderWindow;
+    private bool _isDebug;
 
-    public ReminderManager(double intervalInSeconds)
+    public ReminderManager(VigilServices services, TimeSpan interval)
     {
-      _reminderWindow = new ReminderWindow();
-      _interval = intervalInSeconds * 1000;
+      _services = services;
+      _interval = interval.TotalMilliseconds;
       _timer = new System.Timers.Timer(_interval);
       _timer.Elapsed += OnTimedEvent;
       _timer.AutoReset = true;
       _timer.Enabled = true;
       _nextRun = DateTime.Now.AddMilliseconds(_interval);
       _isPaused = false;
+      _isDebug = false;
     }
 
     private async void OnTimedEvent(Object? source, ElapsedEventArgs e)
     {
       lock (_lock)
       {
+        if (_services == null) { Console.WriteLine("Error: ReminderManager services are null"); return; }
         _nextRun = DateTime.Now.AddMilliseconds(_interval);
-        _reminderWindow?.Dispatcher.Invoke(() => _reminderWindow.Show());
+        _services.ReminderWindow?.Dispatcher.Invoke(() => _services.ReminderWindow.Show());
       }
       await Task.Delay(5000);
       lock (_lock)
       {
-        _reminderWindow?.Dispatcher.Invoke(() => _reminderWindow.Hide());
+        if (_services == null) { Console.WriteLine("Error: ReminderManager services are null"); return; }
+        if (!_isDebug)
+        {
+          _services.ReminderWindow?.Dispatcher.Invoke(() => _services.ReminderWindow.Hide());
+        }
       }
     }
 
@@ -53,6 +60,28 @@ namespace Vigil.Reminder
         _interval = intervalInSeconds * 1000;
         _timer.Interval = _interval;
         _nextRun = DateTime.Now.AddMilliseconds(_interval);
+      }
+    }
+
+    public void DebugOn()
+    {
+      lock (_lock)
+      {
+        if (_services == null) { Console.WriteLine("Error: ReminderManager services are null"); return; }
+        Pause();
+        _isDebug = true;
+        _services.ReminderWindow?.Dispatcher.Invoke(() => _services.ReminderWindow.Show());
+      }
+    }
+
+    public void DebugOff()
+    {
+      lock (_lock)
+      {
+        if (_services == null) { Console.WriteLine("Error: ReminderManager services are null"); return; }
+        _isDebug = false;
+        _services.ReminderWindow?.Dispatcher.Invoke(() => _services.ReminderWindow.Hide());
+        Resume();
       }
     }
 

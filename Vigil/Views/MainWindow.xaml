@@ -1,4 +1,4 @@
-<Window x:Class="Vigil.Views.MainWindow"
+<local:VigilWindow x:Class="Vigil.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:Vigil.Views"
@@ -28,4 +28,4 @@ WindowStyle="None"
         FontWeight="Bold"
         Background="Transparent"/>
   </Grid>
-</Window>
+</local:VigilWindow>

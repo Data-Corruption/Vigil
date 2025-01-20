@@ -5,45 +5,31 @@ using Vigil.Hardware;
 
 namespace Vigil.Views
 {
-  public partial class SettingsWindow : Window
+  public partial class SettingsWindow : VigilWindow
   {
-    private readonly ConfigManager<ConfigData> _configManager;
-    private readonly HardwareMonitor _hardwareMonitor;
-    private readonly DispatcherTimer _timer;
+    public SettingsWindow(VigilServices services, TimeSpan updateInterval) : base(services, updateInterval){}
 
-    public SettingsWindow(ConfigManager<ConfigData> configManager, HardwareMonitor hardwareMonitor)
+    public override void Init()
     {
+      if (_services == null) { Console.WriteLine("Error: main window services are null"); return; }
       InitializeComponent();
-      _configManager = configManager;
-      _hardwareMonitor = hardwareMonitor;
-      // Initialize and start the timer to update UI every second
-      _timer = new DispatcherTimer
-      {
-        Interval = TimeSpan.FromSeconds(1)
-      };
-      _timer.Tick += Draw;
-      _timer.Start();
+      AllSensorData.Text = _services.HardwareMonitor.GetAllSensorData();
     }
 
-    private void Draw(object? sender, EventArgs e)
-    {
-      if (!IsVisible)
-      {
-        return;
-      }
-      OutputTextBox.Text = _hardwareMonitor.GetLatestData();
-    }
+    public override void Update(object? sender, EventArgs e){}
 
     private void SetPosOne_Click(object sender, RoutedEventArgs e)
     {
-      Console.WriteLine($"Setting position one to {_configManager.GetConfig().MainWindowCurrentPos}");
-      _configManager.UpdateConfig(cfg => { cfg.MainWindowPosOne = cfg.MainWindowCurrentPos; });
+      if (_services == null) { Console.WriteLine("Error: main window services are null"); return; }
+      Console.WriteLine($"Setting position one to {_services.ConfigManager.GetConfig().MainWindowCurrentPos}");
+      _services.ConfigManager.UpdateConfig(cfg => { cfg.MainWindowPosOne = cfg.MainWindowCurrentPos; });
     }
 
     private void SetPosTwo_Click(object sender, RoutedEventArgs e)
     {
-      Console.WriteLine($"Setting position two to {_configManager.GetConfig().MainWindowCurrentPos}");
-      _configManager.UpdateConfig(cfg => { cfg.MainWindowPosTwo = cfg.MainWindowCurrentPos; });
+      if (_services == null) { Console.WriteLine("Error: main window services are null"); return; }
+      Console.WriteLine($"Setting position two to {_services.ConfigManager.GetConfig().MainWindowCurrentPos}");
+      _services.ConfigManager.UpdateConfig(cfg => { cfg.MainWindowPosTwo = cfg.MainWindowCurrentPos; });
     }
 
     private void ExitButton_Click(object sender, RoutedEventArgs e)

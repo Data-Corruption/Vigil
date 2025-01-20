@@ -38,7 +38,7 @@ namespace Vigil.Hardware
       }
     }
 
-    public string GetLatestData()
+    public string GetAllSensorData()
     {
       lock (_lock)
       {
