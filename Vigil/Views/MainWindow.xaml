@@ -1,45 +1,109 @@
-<local:VigilWindow x:Class="Vigil.Views.MainWindow"
-                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                   xmlns:local="clr-namespace:Vigil.Views"
-                   Title="System Monitor"
-                   Height="400"
-                   Width="600"
-                   Topmost="True">
-  <Grid MouseDown="Window_MouseDown"
-        Margin="10">
-    <!--
+<local:VigilWindow
+    x:Class="Vigil.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Vigil.Views"
+    Title="System Monitor"
+    Height="400"
+    Width="600"
+    Topmost="True">
 
-WindowStyle="None"
-        AllowsTransparency="True"
-        Background="Transparent"
+    <local:VigilWindow.Resources>
+        <Style x:Key="Graph" TargetType="Border">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <EventSetter Event="MouseEnter" Handler="SquareBorder_MouseEnter"/>
+            <EventSetter Event="MouseLeave" Handler="SquareBorder_MouseLeave"/>
+        </Style>
+        <Style x:Key="Text" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="TextAlignment" Value="Left"/>
+        </Style>
+        <Style x:Key="Cell" TargetType="Border">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <EventSetter Event="MouseEnter" Handler="SquareBorder_MouseEnter"/>
+            <EventSetter Event="MouseLeave" Handler="SquareBorder_MouseLeave"/>
+        </Style>
+    </local:VigilWindow.Resources>
 
-    <TextBox Name="OutputTextBox"
-             IsReadOnly="True"
-             TextWrapping="Wrap"
-             VerticalScrollBarVisibility="Auto"
-             HorizontalScrollBarVisibility="Auto"
-             FontFamily="Consolas"
-             FontSize="12"
-             Margin="10"/>
-             -->
-    <Label Content="System Monitor"
-           FontSize="16"
-           FontWeight="Bold"
-           Background="Transparent"/>
+    <Grid Margin="10" MouseDown="Window_MouseDown">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
 
-    <Border x:Name="SquareBorder"
-      HorizontalAlignment="Center"
-      VerticalAlignment="Center"
-      Width="20"
-      Height="20"
-      Background="Transparent"
-      BorderBrush="Black"
-      BorderThickness="1"
-      MouseEnter="OnMouseEnter"
-      MouseLeave="OnMouseLeave">
-      <Image x:Name="BitmapDisplay" Width="20" Height="20" />
-    </Border>
+        <!-- Title at the top -->
+        <Label
+            Grid.Row="0"
+            Content="System Monitor"
+            FontSize="16"
+            FontWeight="Bold"
+            Background="Transparent"
+            HorizontalAlignment="Left"/>
 
-  </Grid>
+        <!-- 2x4 layout for squares -->
+        <UniformGrid
+            Grid.Row="1"
+            Rows="2"
+            Columns="4"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top">
+
+            <Border Style="{StaticResource Cell}">
+                <Border Style="{StaticResource Graph}">
+                    <Image Name="cpuUsage"/>
+                </Border>
+            </Border>
+
+            <Border Style="{StaticResource Cell}">
+                <Border Style="{StaticResource Graph}">
+                    <Image Name="gpuUsage"/>
+                </Border>
+            </Border>
+
+            <Border Style="{StaticResource Cell}">
+                <Border Style="{StaticResource Graph}">
+                    <Image Name="gpuVramUsage"/>
+                </Border>
+            </Border>
+
+            <Border Style="{StaticResource Cell}">
+                <Border Style="{StaticResource Graph}">
+                    <Image Name="ramUsage"/>
+                </Border>
+            </Border>
+
+            <Border Style="{StaticResource Cell}">
+                <Border Style="{StaticResource Graph}">
+                    <Image Name="cpuTemp"/>
+                </Border>
+            </Border>
+
+            <Border Style="{StaticResource Cell}">
+                <Border Style="{StaticResource Graph}">
+                    <Image Name="gpuTemp"/>
+                </Border>
+            </Border>
+
+            <Border Style="{StaticResource Cell}">
+                <Border Style="{StaticResource Graph}">
+                    <Image Name="ethUsage"/>
+                </Border>
+            </Border>
+
+            <Border Style="{StaticResource Cell}">
+                <Label Style="{StaticResource Text}" Content="20"/>
+            </Border>
+
+        </UniformGrid>
+    </Grid>
 </local:VigilWindow>
