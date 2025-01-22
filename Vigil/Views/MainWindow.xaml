@@ -11,98 +11,81 @@
     <local:VigilWindow.Resources>
         <Style x:Key="Graph" TargetType="Border">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Black"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <EventSetter Event="MouseEnter" Handler="SquareBorder_MouseEnter"/>
-            <EventSetter Event="MouseLeave" Handler="SquareBorder_MouseLeave"/>
-        </Style>
-        <Style x:Key="Text" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="ClipToBounds" Value="True"/>
             <Setter Property="VerticalAlignment" Value="Stretch"/>
-            <Setter Property="TextAlignment" Value="Left"/>
-        </Style>
-        <Style x:Key="Cell" TargetType="Border">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Black"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <EventSetter Event="MouseEnter" Handler="SquareBorder_MouseEnter"/>
-            <EventSetter Event="MouseLeave" Handler="SquareBorder_MouseLeave"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <EventSetter Event="MouseEnter" Handler="Graph_MouseEnter"/>
+            <EventSetter Event="MouseLeave" Handler="Graph_MouseLeave"/>
         </Style>
     </local:VigilWindow.Resources>
 
-    <Grid Margin="10" MouseDown="Window_MouseDown">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-
-        <!-- Title at the top -->
-        <Label
-            Grid.Row="0"
-            Content="System Monitor"
-            FontSize="16"
-            FontWeight="Bold"
-            Background="Transparent"
-            HorizontalAlignment="Left"/>
-
+    <Grid x:Name="RootGrid" Margin="10" MouseDown="Window_MouseDown">
         <!-- 2x4 layout for squares -->
         <UniformGrid
-            Grid.Row="1"
+            x:Name="monitorUniformGrid"
             Rows="2"
             Columns="4"
             HorizontalAlignment="Left"
             VerticalAlignment="Top">
 
-            <Border Style="{StaticResource Cell}">
-                <Border Style="{StaticResource Graph}">
-                    <Image Name="cpuUsage"/>
-                </Border>
-            </Border>
+            <!--
+                All the following grids will have Left set to 1* and Right set to 3*.
+                The right will toggle between 3* and 0* to hide the right content.
+            -->
 
-            <Border Style="{StaticResource Cell}">
-                <Border Style="{StaticResource Graph}">
-                    <Image Name="gpuUsage"/>
+            <Grid Tag="Cell">
+                <Border Tag="Left" Grid.Column="0" Style="{StaticResource Graph}">
+                    <Image Name="cpuUsage" HorizontalAlignment="Right" VerticalAlignment="Top" Stretch="None"/>
                 </Border>
-            </Border>
+                <TextBlock Tag="Right" Grid.Column="1" Text="test" Foreground="White" Background="Transparent"/>
+            </Grid>
 
-            <Border Style="{StaticResource Cell}">
-                <Border Style="{StaticResource Graph}">
-                    <Image Name="gpuVramUsage"/>
+            <Grid Tag="Cell">
+                <Border Tag="Left" Grid.Column="0" Style="{StaticResource Graph}">
+                    <Image Name="gpuUsage" HorizontalAlignment="Right" VerticalAlignment="Top" Stretch="None"/>
                 </Border>
-            </Border>
+                <TextBlock Tag="Right" Grid.Column="1" Text="test" Foreground="White" Background="Transparent"/>
+            </Grid>
 
-            <Border Style="{StaticResource Cell}">
-                <Border Style="{StaticResource Graph}">
-                    <Image Name="ramUsage"/>
+            <Grid Tag="Cell">
+                <Border Tag="Left" Grid.Column="0" Style="{StaticResource Graph}">
+                    <Image Name="gpuVramUsage" HorizontalAlignment="Right" VerticalAlignment="Top" Stretch="None"/>
                 </Border>
-            </Border>
+                <TextBlock Tag="Right" Grid.Column="1" Text="test" Foreground="White" Background="Transparent"/>
+            </Grid>
 
-            <Border Style="{StaticResource Cell}">
-                <Border Style="{StaticResource Graph}">
-                    <Image Name="cpuTemp"/>
+            <Grid Tag="Cell">
+                <Border Tag="Left" Grid.Column="0" Style="{StaticResource Graph}">
+                    <Image Name="ramUsage" HorizontalAlignment="Right" VerticalAlignment="Top" Stretch="None"/>
                 </Border>
-            </Border>
+                <TextBlock Tag="Right" Grid.Column="1" Text="test" Foreground="White" Background="Transparent"/>
+            </Grid>
 
-            <Border Style="{StaticResource Cell}">
-                <Border Style="{StaticResource Graph}">
-                    <Image Name="gpuTemp"/>
+            <Grid Tag="Cell">
+                <Border Tag="Left" Grid.Column="0" Style="{StaticResource Graph}">
+                    <Image Name="cpuTemp" HorizontalAlignment="Right" VerticalAlignment="Top" Stretch="None"/>
                 </Border>
-            </Border>
+                <TextBlock Tag="Right" Grid.Column="1" Text="test" Foreground="White" Background="Transparent"/>
+            </Grid>
 
-            <Border Style="{StaticResource Cell}">
-                <Border Style="{StaticResource Graph}">
-                    <Image Name="ethUsage"/>
+            <Grid Tag="Cell">
+                <Border Tag="Left" Grid.Column="0" Style="{StaticResource Graph}">
+                    <Image Name="gpuTemp" HorizontalAlignment="Right" VerticalAlignment="Top" Stretch="None"/>
                 </Border>
-            </Border>
+                <TextBlock Tag="Right" Grid.Column="1" Text="test" Foreground="White" Background="Transparent"/>
+            </Grid>
 
-            <Border Style="{StaticResource Cell}">
-                <Label Style="{StaticResource Text}" Content="20"/>
-            </Border>
+            <Grid Tag="Cell">
+                <Border Tag="Left" Grid.Column="0" Style="{StaticResource Graph}">
+                    <Image Name="ethUsage" HorizontalAlignment="Right" VerticalAlignment="Top" Stretch="None"/>
+                </Border>
+                <TextBlock Tag="Right" Grid.Column="1" Text="test" Foreground="White" Background="Transparent"/>
+            </Grid>
+
+            <Grid>
+                <TextBlock Name="ReminderCountdown" Text="test" Foreground="White" Background="Transparent"/>
+            </Grid>
 
         </UniformGrid>
     </Grid>

@@ -30,8 +30,28 @@ namespace Vigil.Views
 
       var config = _services.ConfigManager.GetConfig();
       this.Loaded += (s, e) => SetPos(config.MainWindowPosOne);
-      SetGraphSize(config.GraphScale);
 
+      monitorUniformGrid.Height = config.GraphHeight;
+      monitorUniformGrid.Width = double.NaN; // auto width
+
+      // Setup cells
+      var cells = FindElementsByTag(RootGrid, "Cell");
+      foreach (var cell in cells)
+      {
+        // get the left and right items
+        var left = FindElementsByTag(cell, "Left");
+        var right = FindElementsByTag(cell, "Right");
+        if (!left.Any() || !right.Any()) { Console.WriteLine("Error: left or right item is null"); continue; }
+        // get the left and right columns
+        var leftCol = left as ColumnDefinition;
+        var rightCol = right as ColumnDefinition;
+        if (leftCol == null || rightCol == null) { Console.WriteLine("Error: left or right column is null"); continue; }
+        // set the width of the left and right columns
+        leftCol.Width = new GridLength(1, GridUnitType.Star);
+        rightCol.Width = new GridLength(3, GridUnitType.Star);
+      }
+
+      // Setup graphs
       cpuUsageBitmap = SetupGraph(cpuUsage, config.CpuColor);
       cpuTempBitmap = SetupGraph(cpuTemp, config.CpuColor);
       gpuUsageBitmap = SetupGraph(gpuUsage, config.GpuColor);
@@ -43,12 +63,11 @@ namespace Vigil.Views
 
     private ScrollingBitmap SetupGraph(System.Windows.Controls.Image img, System.Windows.Media.Color color)
     {
-      var bitmap = new ScrollingBitmap(20, 20, 40, 96, 96) { PixelColor = color };
+      var bitmap = new ScrollingBitmap(20, 20, 96, 96) { PixelColor = color };
       img.Source = bitmap.Bitmap;
       if (img.Parent is Border border) { border.BorderBrush = new SolidColorBrush(color); }
       return bitmap;
     }
-
 
     public override void Update(object? sender, EventArgs e)
     {
@@ -62,46 +81,21 @@ namespace Vigil.Views
       ethUsageBitmap?.Push(0.5);
     }
 
-    public void SetGraphSize(int size)
+    private IEnumerable<DependencyObject> FindElementsByTag(DependencyObject parent, object tag)
     {
-      if (_graphSize == size) return;
-      if (_graphSize > size) {
-        // shrinking
-        
-      }
-      else {
-        // expanding
-      }
-      _graphSize = size;
-      // Get the style you want to update:
-      var style = (Style)Resources["SquareBorderStyle"];
-      // Find all Border controls in the visual tree that use that style.
-      var borders = FindAll<Border>(this).Where(b => b.Style == (Style)Resources["Cell"]);
-      // Apply your changes to each matching Border
-      foreach (var border in borders)
+      if (parent == null) yield break;
+      int childCount = VisualTreeHelper.GetChildrenCount(parent);
+      for (int i = 0; i < childCount; i++)
       {
-        // Example: change the border’s brush
-        border.BorderBrush = Brushes.Red;
-        // or reapply the style if you modified it:
-        // border.Style = null;
-        // border.Style = style;
-      }
-    }
-
-    private IEnumerable<T> FindAll<T>(DependencyObject parent) where T : DependencyObject
-    {
-      // Breadth-first search
-      var queue = new Queue<DependencyObject>();
-      queue.Enqueue(parent);
-
-      while (queue.Count > 0)
-      {
-        var current = queue.Dequeue();
-        if (current is T matched)
-          yield return matched;
-
-        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(current); i++)
-          queue.Enqueue(VisualTreeHelper.GetChild(current, i));
+        var child = VisualTreeHelper.GetChild(parent, i);
+        if (child is FrameworkElement fe && fe.Tag != null && fe.Tag.Equals(tag))
+        {
+          yield return child;
+        }
+        foreach (var descendant in FindElementsByTag(child, tag))
+        {
+          yield return descendant;
+        }
       }
     }
 
@@ -138,88 +132,14 @@ namespace Vigil.Views
     public System.Windows.Point GetCurrentPosition() { return new System.Windows.Point(Left, Top); }
     public System.Windows.Size GetCurrentSize() { return new System.Windows.Size(Width, Height); }
 
-    /*
-    private void OnMouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+    private void Graph_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
-      // Expand canvas width and align right
-      SquareBorder.Width = 40;
-      BitmapDisplay.Width = 40;
-      BitmapDisplay.Source = _scrollingBitmap.LargeBitmap;
+      // get right item as col and set width to 0*
     }
 
-    private void OnMouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+    private void Graph_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
-      // Shrink canvas width and keep clipped content
-      BitmapDisplay.Source = _scrollingBitmap.Bitmap;
-      SquareBorder.Width = 20;
-      BitmapDisplay.Width = 20;
-    }
-    */
-
-    private void SquareBorder_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-    {
-      if (sender is Border border && border.Child is System.Windows.Controls.Image img)
-      {
-        border.Width = 40;
-        img.Width = 40;
-        switch (img.Name)
-        {
-          case "cpuUsage":
-            img.Source = cpuUsageBitmap?.LargeBitmap;
-            break;
-          case "cpuTemp":
-            img.Source = cpuTempBitmap?.LargeBitmap;
-            break;
-          case "gpuUsage":
-            img.Source = gpuUsageBitmap?.LargeBitmap;
-            break;
-          case "gpuTemp":
-            img.Source = gpuTempBitmap?.LargeBitmap;
-            break;
-          case "gpuVramUsage":
-            img.Source = gpuVramUsageBitmap?.LargeBitmap;
-            break;
-          case "ramUsage":
-            img.Source = ramUsageBitmap?.LargeBitmap;
-            break;
-          case "ethUsage":
-            img.Source = ethUsageBitmap?.LargeBitmap;
-            break;
-        }
-      }
-    }
-
-    private void SquareBorder_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-    {
-      if (sender is Border border && border.Child is System.Windows.Controls.Image img)
-      {
-        switch (img.Name)
-        {
-          case "cpuUsage":
-            img.Source = cpuUsageBitmap?.Bitmap;
-            break;
-          case "cpuTemp":
-            img.Source = cpuTempBitmap?.Bitmap;
-            break;
-          case "gpuUsage":
-            img.Source = gpuUsageBitmap?.Bitmap;
-            break;
-          case "gpuTemp":
-            img.Source = gpuTempBitmap?.Bitmap;
-            break;
-          case "gpuVramUsage":
-            img.Source = gpuVramUsageBitmap?.Bitmap;
-            break;
-          case "ramUsage":
-            img.Source = ramUsageBitmap?.Bitmap;
-            break;
-          case "ethUsage":
-            img.Source = ethUsageBitmap?.Bitmap;
-            break;
-        }
-        border.Width = 20;
-        img.Width = 20;
-      }
+      // get right item as col and set width to 3*
     }
   }
 }

@@ -4,7 +4,7 @@ namespace Vigil.Config
 {
   public class ConfigData
   {
-    public int GraphScale { get; set; } = 18;
+    public int GraphHeight { get; set; } = 40;
     public System.Windows.Point MainWindowPosOne { get; set; } = new System.Windows.Point(0, 0);
     public System.Windows.Point MainWindowPosTwo { get; set; } = new System.Windows.Point(0, 0);
     public System.Windows.Point ReminderWindowPos { get; set; } = new System.Windows.Point(0, 0);
