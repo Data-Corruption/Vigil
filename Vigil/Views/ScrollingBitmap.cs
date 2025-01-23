@@ -7,22 +7,27 @@ namespace Vigil.Views
   public class ScrollingBitmap
   {
     public WriteableBitmap Bitmap { get; private set; }
+    public WriteableBitmap WideBitmap { get; private set; }
     public System.Windows.Media.Color PixelColor { get; set; } = Colors.Black;
     public System.Windows.Media.Color BackgroundColor { get; set; } = Colors.Transparent;
     public int Width { get; private set; }
     public int Height { get; private set; }
+    public int WideWidth { get; private set; }
 
-    public ScrollingBitmap(int width, int height, int dpiX, int dpiY)
+    public ScrollingBitmap(int width, int height, int wideWidth, int dpiX, int dpiY)
     {
       Bitmap = new WriteableBitmap(width, height, dpiX, dpiY, PixelFormats.Bgra32, null);
+      WideBitmap = new WriteableBitmap(wideWidth, height, dpiX, dpiY, PixelFormats.Bgra32, null);
       Width = width;
       Height = height;
+      WideWidth = wideWidth;
       Clear();
     }
 
     public void Push(double lineHeight)
     {
       ScrollLeftOnePixel(Bitmap, (int)(Height * lineHeight));
+      ScrollLeftOnePixel(WideBitmap, (int)(Height * lineHeight));
     }
 
     // shift the bitmap to the left by one pixel, add a new column on the right. newLineHeight is the height of the new column in pixels, everything above it is background color
@@ -69,10 +74,15 @@ namespace Vigil.Views
     // Sets all pixels to the background color
     public void Clear()
     {
-      // Clear the bitmap
-      Bitmap.Lock();
-      int stride = Bitmap.BackBufferStride;
-      int size = Bitmap.PixelHeight * stride;
+      clearBitmap(Bitmap);
+      clearBitmap(WideBitmap);
+    }
+
+    private void clearBitmap(WriteableBitmap bitmap)
+    {
+      bitmap.Lock();
+      int stride = bitmap.BackBufferStride;
+      int size = bitmap.PixelHeight * stride;
       byte[] pixels = new byte[size];
       for (int i = 0; i < size; i += 4)
       {
@@ -81,9 +91,9 @@ namespace Vigil.Views
         pixels[i + 2] = BackgroundColor.R;
         pixels[i + 3] = BackgroundColor.A;
       }
-      System.Runtime.InteropServices.Marshal.Copy(pixels, 0, Bitmap.BackBuffer, size);
-      Bitmap.AddDirtyRect(new Int32Rect(0, 0, Bitmap.PixelWidth, Bitmap.PixelHeight));
-      Bitmap.Unlock();
+      System.Runtime.InteropServices.Marshal.Copy(pixels, 0, bitmap.BackBuffer, size);
+      bitmap.AddDirtyRect(new Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
+      bitmap.Unlock();
     }
   }
 }
