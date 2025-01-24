@@ -47,7 +47,8 @@
       <TextBlock Grid.Row="1"
                  Grid.Column="3"
                  Name="reminderCountdown"
-                 Text="Reminder Countdown"/>
+                 Foreground="White"
+                 Text="test"/>
     </Grid>
 
   </Grid>

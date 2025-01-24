@@ -1,9 +1,31 @@
 <local:VigilWindow x:Class="Vigil.Views.ReminderDebugWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:Vigil.Views"
-        Title="Vision Protection Reminder Debug"
-        WindowStartupLocation="Manual"
-        Topmost="True">
-  <Grid Name="RootGrid" Background="#8000FF00" MouseDown="Window_MouseDown"/>
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:local="clr-namespace:Vigil.Views"
+                   Title="Vision Protection Reminder Debug"
+                   WindowStartupLocation="Manual"
+                   Topmost="True">
+  <Grid Name="RootGrid"
+      Background="#8000FF00"
+      MouseDown="Window_MouseDown">
+    <StackPanel>
+      <StackPanel Orientation="Horizontal"
+          Margin="0,0,0,10">
+        <Label Content="Reminder Interval (minutes):"
+            Width="200"/>
+        <TextBox Width="200"
+            Name="ReminderInterval"/>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal"
+          Margin="0,0,0,10">
+        <Label Content="Reminder Duration (seconds):"
+            Width="200"/>
+        <TextBox Width="200"
+            Name="ReminderDuration"/>
+      </StackPanel>
+      <Button Content="Update Reminder"
+        Width="100"
+        Click="Update_Click"/>
+    </StackPanel>
+  </Grid>
 </local:VigilWindow>

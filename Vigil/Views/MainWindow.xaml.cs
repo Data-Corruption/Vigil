@@ -71,6 +71,12 @@ namespace Vigil.Views
     public override void Update(object? sender, EventArgs e)
     {
       if (!IsVisible) return;
+      if (_services == null) { Console.WriteLine("Error: main window services are null"); System.Windows.Application.Current.Shutdown(); return; }
+
+      // Update Reminder
+      reminderCountdown.Text = _services.ReminderManager.GetTimeUntilNextRun();
+
+      // Update HardwareMonitor
       cpuUsageBitmap?.Push(0.5);
       cpuTempBitmap?.Push(0.5);
       gpuUsageBitmap?.Push(0.5);

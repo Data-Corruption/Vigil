@@ -10,14 +10,16 @@ namespace Vigil.Reminder
     private readonly object _lock = new object();
     private System.Timers.Timer _timer;
     private double _interval;
+    private int _duration;
     private DateTime _nextRun;
     private bool _isPaused;
     private bool _isDebug;
 
-    public ReminderManager(VigilServices services, TimeSpan interval)
+    public ReminderManager(VigilServices services, TimeSpan interval, TimeSpan duration)
     {
       _services = services;
       _interval = interval.TotalMilliseconds;
+      _duration = (int)duration.TotalMilliseconds;
       _timer = new System.Timers.Timer(_interval);
       _timer.Elapsed += OnTimedEvent;
       _timer.AutoReset = true;
@@ -35,7 +37,7 @@ namespace Vigil.Reminder
         _nextRun = DateTime.Now.AddMilliseconds(_interval);
         _services.ReminderWindow?.Dispatcher.Invoke(() => _services.ReminderWindow.Show());
       }
-      await Task.Delay(5000);
+      await Task.Delay(_duration);
       lock (_lock)
       {
         if (_services == null) { Console.WriteLine("Error: ReminderManager services are null"); return; }
@@ -46,21 +48,22 @@ namespace Vigil.Reminder
       }
     }
 
-    public TimeSpan GetTimeUntilNextRun()
+    // returns string in format "20m"
+    public string GetTimeUntilNextRun()
     {
       lock (_lock)
       {
-        return _nextRun - DateTime.Now;
+        return (_nextRun - DateTime.Now).ToString("mm") + "m";
       }
     }
 
-    public void SetInterval(double intervalInSeconds)
+    public void Update(TimeSpan interval, TimeSpan duration)
     {
       lock (_lock)
       {
-        _interval = intervalInSeconds * 1000;
+        _interval = interval.TotalMilliseconds;
+        _duration = (int)duration.TotalMilliseconds;
         _timer.Interval = _interval;
-        _nextRun = DateTime.Now.AddMilliseconds(_interval);
       }
     }
 
