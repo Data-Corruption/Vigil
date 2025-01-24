@@ -38,51 +38,51 @@
     <StackPanel Grid.Row="2" Margin="0,10,0,0">
       <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
       <Label Content="CPU Usage:" Width="150"/>
-      <ComboBox Width="200" Name="CpuUsageSensor"/>
+      <ComboBox Width="200" x:Name="CpuUsageSensor" SelectionChanged="SelectionChanged"/>
       </StackPanel>
       <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
       <Label Content="CPU Temp:" Width="150"/>
-      <ComboBox Width="200" Name="CpuTempSensor"/>
+      <ComboBox Width="200" x:Name="CpuTempSensor" SelectionChanged="SelectionChanged"/>
       </StackPanel>
       <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
       <Label Content="GPU Usage:" Width="150"/>
-      <ComboBox Width="200" Name="GpuUsageSensor"/>
+      <ComboBox Width="200" x:Name="GpuUsageSensor" SelectionChanged="SelectionChanged"/>
       </StackPanel>
       <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
       <Label Content="GPU Temp:" Width="150"/>
-      <ComboBox Width="200" Name="GpuTempSensor"/>
+      <ComboBox Width="200" x:Name="GpuTempSensor" SelectionChanged="SelectionChanged"/>
       </StackPanel>
       <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-      <Label Content="VRAM Max:" Width="150"/>
-      <ComboBox Width="200" Name="VramMaxSensor"/>
+      <Label Content="VRAM Total:" Width="150"/>
+      <ComboBox Width="200" x:Name="VramTotalSensor" SelectionChanged="SelectionChanged"/>
       </StackPanel>
       <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-      <Label Content="VRAM Used:" Width="150"/>
-      <ComboBox Width="200" Name="VramUsedSensor"/>
+      <Label Content="VRAM Free:" Width="150"/>
+      <ComboBox Width="200" x:Name="VramFreeSensor" SelectionChanged="SelectionChanged"/>
       </StackPanel>
       <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
       <Label Content="RAM Usage:" Width="150"/>
-      <ComboBox Width="200" Name="RamUsageSensor"/>
+      <ComboBox Width="200" x:Name="RamUsageSensor" SelectionChanged="SelectionChanged"/>
       </StackPanel>
       <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
       <Label Content="Ethernet Usage:" Width="150"/>
-      <ComboBox Width="200" Name="EthernetUsageSensor"/>
+      <ComboBox Width="200" x:Name="EthUsageSensor" SelectionChanged="SelectionChanged"/>
       </StackPanel>
       <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
       <Label Content="CPU Color (HEX):" Width="150"/>
-      <TextBox Width="200" Name="CpuColor"/>
+      <TextBox Width="200" x:Name="CpuColor"/>
       </StackPanel>
       <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
       <Label Content="GPU Color (HEX):" Width="150"/>
-      <TextBox Width="200" Name="GpuColor"/>
+      <TextBox Width="200" x:Name="GpuColor"/>
       </StackPanel>
       <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
       <Label Content="RAM Color (HEX):" Width="150"/>
-      <TextBox Width="200" Name="RamColor"/>
+      <TextBox Width="200" x:Name="RamColor"/>
       </StackPanel>
       <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
       <Label Content="Ethernet Color (HEX):" Width="150"/>
-      <TextBox Width="200" Name="EthernetColor"/>
+      <TextBox Width="200" x:Name="EthernetColor"/>
       </StackPanel>
     </StackPanel>
 

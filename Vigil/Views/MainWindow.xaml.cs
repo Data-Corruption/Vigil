@@ -76,14 +76,34 @@ namespace Vigil.Views
       // Update Reminder
       reminderCountdown.Text = _services.ReminderManager.GetTimeUntilNextRun();
 
-      // Update HardwareMonitor
-      cpuUsageBitmap?.Push(0.5);
-      cpuTempBitmap?.Push(0.5);
-      gpuUsageBitmap?.Push(0.5);
-      gpuTempBitmap?.Push(0.5);
-      gpuVramUsageBitmap?.Push(0.5);
-      ramUsageBitmap?.Push(0.5);
-      ethUsageBitmap?.Push(0.5);
+      // Update Sensors
+      _services.HardwareMonitor.Update();
+
+      lock (_services.HardwareMonitor.Lock)
+      {
+        var cpuUsageValue = _services.HardwareMonitor.CpuUsageSensor?.Sensor?.Value ?? 0;
+        cpuUsageBitmap?.Push(cpuUsageValue / 100);
+        cpuUsage.GraphLabel.Text = $" {(int)cpuUsageValue}%";
+        var cpuTempValue = _services.HardwareMonitor.CpuTempSensor?.Sensor?.Value ?? 0;
+        cpuTempBitmap?.Push(cpuTempValue / 100);
+        cpuTemp.GraphLabel.Text = $"  {(int)cpuTempValue}°C";
+        var gpuUsageValue = _services.HardwareMonitor.GpuUsageSensor?.Sensor?.Value ?? 0;
+        gpuUsageBitmap?.Push(gpuUsageValue / 100);
+        gpuUsage.GraphLabel.Text = $" {(int)gpuUsageValue}%";
+        var gpuTempValue = _services.HardwareMonitor.GpuTempSensor?.Sensor?.Value ?? 0;
+        gpuTempBitmap?.Push(gpuTempValue / 100);
+        gpuTemp.GraphLabel.Text = $"  {(int)gpuTempValue}°C";
+        var ramUsageValue = _services.HardwareMonitor.RamUsageSensor?.Sensor?.Value ?? 0;
+        ramUsageBitmap?.Push(ramUsageValue / 100);
+        ramUsage.GraphLabel.Text = $" {(int)ramUsageValue}%";
+        var ethUsageValue = _services.HardwareMonitor.EthUsageSensor?.Sensor?.Value ?? 0;
+        ethUsageBitmap?.Push(ethUsageValue / 100);
+        ethUsage.GraphLabel.Text = $" {(int)ethUsageValue}%";
+        // GPU VRAM usage is a bit special, as it requires two sensors
+        var vramUsageValue = (_services.HardwareMonitor.VramFreeSensor?.Sensor?.Value / _services.HardwareMonitor.VramTotalSensor?.Sensor?.Value) ?? 0;
+        gpuVramUsageBitmap?.Push(vramUsageValue);
+        gpuVramUsage.GraphLabel.Text = $" {(int)(vramUsageValue * 100)}%";
+      }
     }
 
     private void Window_MouseDown(object sender, MouseButtonEventArgs e)

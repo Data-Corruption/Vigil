@@ -106,7 +106,7 @@ namespace Vigil
     {
       ConfigManager = new ConfigManager<ConfigData>(configPath, new ConfigData());
       ReminderManager = new ReminderManager(this, ConfigManager.GetConfig().ReminderInterval, ConfigManager.GetConfig().ReminderDuration);
-      HardwareMonitor = new HardwareMonitor();
+      HardwareMonitor = new HardwareMonitor(this);
       ContextMenu = new ContextMenuStrip();
       NotifyIcon = new NotifyIcon();
       MainWindow = new MainWindow(this, TimeSpan.FromSeconds(1));

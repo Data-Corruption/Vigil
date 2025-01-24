@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 using Vigil.Config;
 using Vigil.Hardware;
@@ -13,7 +14,16 @@ namespace Vigil.Views
     {
       if (_services == null) { Console.WriteLine("Error: main window services are null"); return; }
       InitializeComponent();
-      AllSensorData.Text = _services.HardwareMonitor.GetAllSensorData();
+      var (scanOutput, sensorData) = _services.HardwareMonitor.GetAllSensorData();
+      AllSensorData.Text = scanOutput;
+      CpuUsageSensor.ItemsSource = sensorData;
+      CpuTempSensor.ItemsSource = sensorData;
+      GpuUsageSensor.ItemsSource = sensorData;
+      GpuTempSensor.ItemsSource = sensorData;
+      VramTotalSensor.ItemsSource = sensorData;
+      VramFreeSensor.ItemsSource = sensorData;
+      RamUsageSensor.ItemsSource = sensorData;
+      EthUsageSensor.ItemsSource = sensorData;
     }
 
     public override void Update(object? sender, EventArgs e){}
@@ -32,6 +42,45 @@ namespace Vigil.Views
       var mainWindowCurrentPos = _services.MainWindow.GetCurrentPosition();
       Console.WriteLine($"Setting position two to {mainWindowCurrentPos}");
       _services.ConfigManager.UpdateConfig(cfg => { cfg.MainWindowPosTwo = mainWindowCurrentPos; });
+    }
+
+    private void SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+      if (_services == null) { Console.WriteLine("Error: main window services are null"); return; }
+      if (sender is System.Windows.Controls.ComboBox cb)
+      {
+        var selectedSensor = cb.SelectedItem as string;
+        if (selectedSensor == null) { return; }
+        Console.WriteLine($"Selected sensor: {selectedSensor}");
+        switch (cb.Name)
+        {
+          case "CpuUsageSensor":
+            _services.ConfigManager.UpdateConfig(cfg => { cfg.CpuUsageSensor =  selectedSensor; });
+            break;
+          case "CpuTempSensor":
+            _services.ConfigManager.UpdateConfig(cfg => { cfg.CpuTempSensor = selectedSensor; });
+            break;
+          case "GpuUsageSensor":
+            _services.ConfigManager.UpdateConfig(cfg => { cfg.GpuUsageSensor = selectedSensor; });
+            break;
+          case "GpuTempSensor":
+            _services.ConfigManager.UpdateConfig(cfg => { cfg.GpuTempSensor = selectedSensor; });
+            break;
+          case "VramTotalSensor":
+            _services.ConfigManager.UpdateConfig(cfg => { cfg.GpuVramTotal = selectedSensor; });
+            break;
+          case "VramFreeSensor":
+            _services.ConfigManager.UpdateConfig(cfg => { cfg.GpuVramFree = selectedSensor; });
+            break;
+          case "RamUsageSensor":
+            _services.ConfigManager.UpdateConfig(cfg => { cfg.RamUsageSensor = selectedSensor; });
+            break;
+          case "EthUsageSensor":
+            _services.ConfigManager.UpdateConfig(cfg => { cfg.EthUsageSensor = selectedSensor; });
+            break;
+        }
+      }
+      _services.HardwareMonitor.UpdateIDs();
     }
 
     private void ExitButton_Click(object sender, RoutedEventArgs e)

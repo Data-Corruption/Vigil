@@ -42,7 +42,7 @@
     <Border Grid.Column="1"
             Style="{StaticResource HoverBorderStyle}"
             IsHitTestVisible="True">
-      <TextBlock Text=" Test%"
+      <TextBlock x:Name="GraphLabel" Text=" Test%"
                  Foreground="White"
                  VerticalAlignment="Center"
                  HorizontalAlignment="Left"/>

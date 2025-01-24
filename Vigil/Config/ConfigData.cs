@@ -14,13 +14,13 @@ namespace Vigil.Config
     public System.Windows.Media.Color GpuColor { get; set; } = Colors.Cyan;
     public System.Windows.Media.Color RamColor { get; set; } = Colors.Green;
     public System.Windows.Media.Color EthColor { get; set; } = Colors.Salmon;
-    public string[] CpuUsageSensorPath { get; set; } = [];
-    public string[] CpuTempSensorPath { get; set; } = [];
-    public string[] GpuUsageSensorPath { get; set; } = [];
-    public string[] GpuTempSensorPath { get; set; } = [];
-    public string[] GpuVramTotalPath { get; set; } = [];
-    public string[] GpuVramUsedPath { get; set; } = [];
-    public string[] RamUsageSensorPath { get; set; } = [];
-    public string[] EthUsageSensorPath { get; set; } = [];
+    public string CpuUsageSensor { get; set; } = "";
+    public string CpuTempSensor { get; set; } = "";
+    public string GpuUsageSensor { get; set; } = "";
+    public string GpuTempSensor { get; set; } = "";
+    public string GpuVramTotal { get; set; } = "";
+    public string GpuVramFree { get; set; } = "";
+    public string RamUsageSensor { get; set; } = "";
+    public string EthUsageSensor { get; set; } = "";
   }
 }
