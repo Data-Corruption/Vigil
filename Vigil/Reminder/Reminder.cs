@@ -71,10 +71,8 @@ namespace Vigil.Reminder
         if (_services == null) { Console.WriteLine("Error: ReminderManager services are null"); return; }
         Pause();
         _isDebug = true;
-        _services.ReminderWindow?.Dispatcher.Invoke(() => {
-          _services.ReminderWindow.AllowsTransparency = false;
-          _services.ReminderWindow.WindowStyle = WindowStyle.SingleBorderWindow;
-          _services.ReminderWindow.Show();
+        _services.ReminderDebugWindow?.Dispatcher.Invoke(() => {
+          _services.ReminderDebugWindow.Show();
           });
       }
     }
@@ -85,10 +83,8 @@ namespace Vigil.Reminder
       {
         if (_services == null) { Console.WriteLine("Error: ReminderManager services are null"); return; }
         _isDebug = false;
-        _services.ReminderWindow?.Dispatcher.Invoke(() => {
-          _services.ReminderWindow.AllowsTransparency = true;
-          _services.ReminderWindow.WindowStyle = WindowStyle.None;
-          _services.ReminderWindow.Hide();
+        _services.ReminderDebugWindow?.Dispatcher.Invoke(() => {
+          _services.ReminderDebugWindow.Hide();
           });
         Resume();
       }

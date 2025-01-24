@@ -37,8 +37,8 @@ namespace Vigil.Views
     private void SetReminderSizeAndPosition_Click(object sender, RoutedEventArgs e)
     {
       if (_services == null) { Console.WriteLine("Error: main window services are null"); return; }
-      var reminderWindowCurrentPos = _services.ReminderWindow.GetCurrentPosition();
-      var reminderWindowCurrentSize = _services.ReminderWindow.GetCurrentSize();
+      var reminderWindowCurrentPos = _services.ReminderDebugWindow.GetCurrentPosition();
+      var reminderWindowCurrentSize = _services.ReminderDebugWindow.GetCurrentSize();
       Console.WriteLine($"Setting reminder window size to {reminderWindowCurrentSize} and position to {reminderWindowCurrentPos}");
       _services.ConfigManager.UpdateConfig(cfg => {
         cfg.ReminderWindowSize = reminderWindowCurrentSize;

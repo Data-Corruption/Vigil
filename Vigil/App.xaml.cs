@@ -100,6 +100,7 @@ namespace Vigil
     public MainWindow? MainWindow { get; }
     public SettingsWindow? SettingsWindow { get; set; }
     public ReminderWindow? ReminderWindow { get; set; }
+    public ReminderDebugWindow? ReminderDebugWindow { get; set; }
 
     public VigilServices(string configPath)
     {
@@ -110,6 +111,7 @@ namespace Vigil
       NotifyIcon = new NotifyIcon();
       MainWindow = new MainWindow(this, TimeSpan.FromSeconds(1));
       ReminderWindow = new ReminderWindow(this, TimeSpan.FromSeconds(1));
+      ReminderDebugWindow = new ReminderDebugWindow(this, TimeSpan.FromSeconds(1));
     }
   }
 }

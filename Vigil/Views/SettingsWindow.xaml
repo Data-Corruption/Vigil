@@ -3,7 +3,7 @@
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:local="clr-namespace:Vigil.Views"
                    Title="System Monitor"
-                   Height="400"
+                   Height="800"
                    Width="600"
                    WindowStartupLocation="CenterScreen">
   <Grid Margin="10">
@@ -13,10 +13,12 @@
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
+
     <Label Grid.Row="0"
            Content="Settings"
            FontSize="16"
            FontWeight="Bold"/>
+
     <StackPanel Grid.Row="1"
                 Orientation="Horizontal"
                 HorizontalAlignment="Left"
@@ -35,6 +37,57 @@
               Width="200"
               Height="30"
               Click="SetReminderSizeAndPosition_Click"/>
+    </StackPanel>
+
+    <StackPanel Grid.Row="2" Margin="0,10,0,0">
+      <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+      <Label Content="CPU Usage:" Width="150"/>
+      <ComboBox Width="200" Name="CpuUsageSensor"/>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+      <Label Content="CPU Temp:" Width="150"/>
+      <ComboBox Width="200" Name="CpuTempSensor"/>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+      <Label Content="GPU Usage:" Width="150"/>
+      <ComboBox Width="200" Name="GpuUsageSensor"/>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+      <Label Content="GPU Temp:" Width="150"/>
+      <ComboBox Width="200" Name="GpuTempSensor"/>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+      <Label Content="VRAM Max:" Width="150"/>
+      <ComboBox Width="200" Name="VramMaxSensor"/>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+      <Label Content="VRAM Used:" Width="150"/>
+      <ComboBox Width="200" Name="VramUsedSensor"/>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+      <Label Content="RAM Usage:" Width="150"/>
+      <ComboBox Width="200" Name="RamUsageSensor"/>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+      <Label Content="Ethernet Usage:" Width="150"/>
+      <ComboBox Width="200" Name="EthernetUsageSensor"/>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+      <Label Content="CPU Color (HEX):" Width="150"/>
+      <TextBox Width="200" Name="CpuColor"/>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+      <Label Content="GPU Color (HEX):" Width="150"/>
+      <TextBox Width="200" Name="GpuColor"/>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+      <Label Content="RAM Color (HEX):" Width="150"/>
+      <TextBox Width="200" Name="RamColor"/>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+      <Label Content="Ethernet Color (HEX):" Width="150"/>
+      <TextBox Width="200" Name="EthernetColor"/>
+      </StackPanel>
     </StackPanel>
 
     <TextBox Grid.Row="3"
