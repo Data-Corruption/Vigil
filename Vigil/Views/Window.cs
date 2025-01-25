@@ -80,8 +80,7 @@ namespace Vigil.Views
       // Adjust position to device pixels
       int deviceX = (int)(wpfPos.X * scalingFactorX);
       int deviceY = (int)(wpfPos.Y * scalingFactorY);
-
-      Console.WriteLine($"Setting window position to {deviceX}, {deviceY}");
+      
       SetWindowPos(source.Handle, IntPtr.Zero, deviceX, deviceY, 0, 0, SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
     }
   }

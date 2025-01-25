@@ -48,12 +48,12 @@ namespace Vigil.Reminder
       }
     }
 
-    // returns string in format "20m"
+    // returns string in format "20m" "5m" etc
     public string GetTimeUntilNextRun()
     {
       lock (_lock)
       {
-        return (_nextRun - DateTime.Now).ToString("mm") + "m";
+        return (_nextRun - DateTime.Now).ToString(@"m\m");
       }
     }
 
