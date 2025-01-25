@@ -9,8 +9,10 @@
   ResizeMode="NoResize"
   Height="34"
   Width="255"
-  Topmost="True">
-  <Grid x:Name="RootGrid" MouseDown="Window_MouseDown">
+  Topmost="True"
+  ShowInTaskbar="False">
+  <Grid x:Name="RootGrid"
+        MouseDown="Window_MouseDown">
     <Grid>
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
@@ -23,27 +25,34 @@
         <ColumnDefinition Width="*"/>
       </Grid.ColumnDefinitions>
 
-      <local:LeftRightHoverControl x:Name="cpuUsage"
-          Grid.Row="0"
-          Grid.Column="0"/>
-      <local:LeftRightHoverControl x:Name="cpuTemp"
-          Grid.Row="0"
-          Grid.Column="1"/>
-      <local:LeftRightHoverControl x:Name="gpuUsage"
-          Grid.Row="0"
-          Grid.Column="2"/>
-      <local:LeftRightHoverControl x:Name="gpuTemp"
-          Grid.Row="0"
-          Grid.Column="3"/>
-      <local:LeftRightHoverControl x:Name="gpuVramUsage"
-          Grid.Row="1"
-          Grid.Column="0"/>
-      <local:LeftRightHoverControl x:Name="ramUsage"
-          Grid.Row="1"
-          Grid.Column="1"/>
-      <local:LeftRightHoverControl x:Name="ethUsage"
-          Grid.Row="1"
-          Grid.Column="2"/>
+      <local:LeftRightHoverControl
+        x:Name="cpuUsage"
+        Grid.Row="0"
+        Grid.Column="0"/>
+      <local:LeftRightHoverControl
+        x:Name="gpuUsage"
+        Grid.Row="0"
+        Grid.Column="1"/>
+      <local:LeftRightHoverControl
+        x:Name="gpuVramUsage"
+        Grid.Row="0"
+        Grid.Column="2"/>
+      <local:LeftRightHoverControl
+        x:Name="ramUsage"
+        Grid.Row="0"
+        Grid.Column="3"/>
+      <local:LeftRightHoverControl
+        x:Name="cpuTemp"
+        Grid.Row="1"
+        Grid.Column="0"/>
+      <local:LeftRightHoverControl
+        x:Name="gpuTemp"
+        Grid.Row="1"
+        Grid.Column="1"/>
+      <local:LeftRightHoverControl
+        x:Name="ethUsage"
+        Grid.Row="1"
+        Grid.Column="2"/>
       <TextBlock Grid.Row="1"
                  Grid.Column="3"
                  Name="reminderCountdown"

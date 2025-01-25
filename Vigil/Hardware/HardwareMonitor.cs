@@ -16,7 +16,7 @@ namespace Vigil.Hardware
     public UsedSensor? GpuUsageSensor { get; private set; }
     public UsedSensor? GpuTempSensor { get; private set; }
     public UsedSensor? VramTotalSensor { get; private set; }
-    public UsedSensor? VramFreeSensor { get; private set; }
+    public UsedSensor? VramUsedSensor { get; private set; }
     public UsedSensor? RamUsageSensor { get; private set; }
     public UsedSensor? EthUsageSensor { get; private set; }
 
@@ -61,7 +61,7 @@ namespace Vigil.Hardware
         GpuUsageSensor = InitSensor(cfg.GpuUsageSensor);
         GpuTempSensor = InitSensor(cfg.GpuTempSensor);
         VramTotalSensor = InitSensor(cfg.GpuVramTotal);
-        VramFreeSensor = InitSensor(cfg.GpuVramFree);
+        VramUsedSensor = InitSensor(cfg.GpuVramUsed);
         RamUsageSensor = InitSensor(cfg.RamUsageSensor);
         EthUsageSensor = InitSensor(cfg.EthUsageSensor);
       }

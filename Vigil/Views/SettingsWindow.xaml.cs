@@ -21,7 +21,7 @@ namespace Vigil.Views
       GpuUsageSensor.ItemsSource = sensorData;
       GpuTempSensor.ItemsSource = sensorData;
       VramTotalSensor.ItemsSource = sensorData;
-      VramFreeSensor.ItemsSource = sensorData;
+      VramUsedSensor.ItemsSource = sensorData;
       RamUsageSensor.ItemsSource = sensorData;
       EthUsageSensor.ItemsSource = sensorData;
     }
@@ -69,8 +69,8 @@ namespace Vigil.Views
           case "VramTotalSensor":
             _services.ConfigManager.UpdateConfig(cfg => { cfg.GpuVramTotal = selectedSensor; });
             break;
-          case "VramFreeSensor":
-            _services.ConfigManager.UpdateConfig(cfg => { cfg.GpuVramFree = selectedSensor; });
+          case "VramUsedSensor":
+            _services.ConfigManager.UpdateConfig(cfg => { cfg.GpuVramUsed = selectedSensor; });
             break;
           case "RamUsageSensor":
             _services.ConfigManager.UpdateConfig(cfg => { cfg.RamUsageSensor = selectedSensor; });

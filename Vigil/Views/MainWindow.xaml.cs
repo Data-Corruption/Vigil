@@ -28,14 +28,14 @@ namespace Vigil.Views
       InitializeComponent();
 
       var config = _services.ConfigManager.GetConfig();
-      this.Loaded += (s, e) => SetPos(config.MainWindowPosOne);
+      this.Loaded += (s, e) => { SetPos(config.MainWindowPosOne); };
 
       // Setup graphs
       cpuUsageBitmap = SetupGraph(cpuUsage, config.CpuColor);
       cpuTempBitmap = SetupGraph(cpuTemp, config.CpuColor);
       gpuUsageBitmap = SetupGraph(gpuUsage, config.GpuColor);
       gpuTempBitmap = SetupGraph(gpuTemp, config.GpuColor);
-      gpuVramUsageBitmap = SetupGraph(gpuVramUsage, config.GpuColor);
+      gpuVramUsageBitmap = SetupGraph(gpuVramUsage, config.VramColor);
       ramUsageBitmap = SetupGraph(ramUsage, config.RamColor);
       ethUsageBitmap = SetupGraph(ethUsage, config.EthColor);
     }
@@ -100,9 +100,18 @@ namespace Vigil.Views
         ethUsageBitmap?.Push(ethUsageValue / 100);
         ethUsage.GraphLabel.Text = $" {(int)ethUsageValue}%";
         // GPU VRAM usage is a bit special, as it requires two sensors
-        var vramUsageValue = (_services.HardwareMonitor.VramFreeSensor?.Sensor?.Value / _services.HardwareMonitor.VramTotalSensor?.Sensor?.Value) ?? 0;
+        var vramUsageValue = (_services.HardwareMonitor.VramUsedSensor?.Sensor?.Value / _services.HardwareMonitor.VramTotalSensor?.Sensor?.Value) ?? 0;
         gpuVramUsageBitmap?.Push(vramUsageValue);
         gpuVramUsage.GraphLabel.Text = $" {(int)(vramUsageValue * 100)}%";
+      }
+
+      if (_services.SettingsWindow == null)
+      {
+        if (_isPosOneSet) {
+          SetPos(_services.ConfigManager.GetConfig().MainWindowPosOne);
+        } else {
+          SetPos(_services.ConfigManager.GetConfig().MainWindowPosTwo);
+        }
       }
     }
 

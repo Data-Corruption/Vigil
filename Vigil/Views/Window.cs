@@ -30,8 +30,9 @@ namespace Vigil.Views
     private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter,
     int X, int Y, int cx, int cy, uint uFlags);
 
-    private const uint SWP_NOZORDER = 0x0004;
     private const uint SWP_NOSIZE = 0x0001;
+    private const uint SWP_NOACTIVATE = 0x0010;
+    private const uint SWP_SHOWWINDOW = 0x0040;
 
     [DllImport("user32.dll")]
     private static extern IntPtr MonitorFromPoint(POINT pt, uint dwFlags);
@@ -81,7 +82,7 @@ namespace Vigil.Views
       int deviceY = (int)(wpfPos.Y * scalingFactorY);
 
       Console.WriteLine($"Setting window position to {deviceX}, {deviceY}");
-      SetWindowPos(source.Handle, IntPtr.Zero, deviceX, deviceY, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
+      SetWindowPos(source.Handle, IntPtr.Zero, deviceX, deviceY, 0, 0, SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
     }
   }
 }
