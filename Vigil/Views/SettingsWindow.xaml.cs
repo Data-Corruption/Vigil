@@ -1,8 +1,5 @@
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
-using Vigil.Config;
-using Vigil.Hardware;
 
 namespace Vigil.Views
 {

@@ -1,3 +1,4 @@
+using System.Windows.Input;
 using Vigil.Config;
 
 namespace Vigil.Views
@@ -23,5 +24,8 @@ namespace Vigil.Views
 
     public System.Windows.Point GetCurrentPosition() { return new System.Windows.Point(Left, Top); }
     public System.Windows.Size GetCurrentSize() { return new System.Windows.Size(Width, Height); }
+    public void SetSize(System.Windows.Size size) { Width = size.Width; Height = size.Height; }
+
+    private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) { this.Hide(); }
   }
 }

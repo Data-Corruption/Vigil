@@ -2,8 +2,6 @@ using System.Windows;
 using System.Windows.Threading;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
-using Vigil.Config;
-using Vigil.Hardware;
 
 namespace Vigil.Views
 {
@@ -59,7 +57,7 @@ namespace Vigil.Views
     /// Input is in WPF units
     /// </summary>
     /// <param name="wpfPos"></param>
-    protected void SetPos(System.Windows.Point wpfPos)
+    public void SetPos(System.Windows.Point wpfPos)
     {
       var source = (HwndSource)PresentationSource.FromVisual(this);
       if (source == null) return;

@@ -53,6 +53,10 @@ namespace Vigil.Views
       }
       _services.ReminderManager.Update(TimeSpan.FromMinutes(intervalValue), TimeSpan.FromSeconds(durationValue));
 
+      // update real window
+      _services.ReminderWindow?.SetSize(currentSize);
+      _services.ReminderWindow?.SetPos(currentPos);
+
       // update config
       _services.ConfigManager.UpdateConfig(cfg => {
         cfg.ReminderWindowSize = currentSize;
