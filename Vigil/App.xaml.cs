@@ -5,6 +5,7 @@ using Vigil.Hardware;
 using Vigil.Config;
 using Vigil.Views;
 using Vigil.Reminder;
+using System.IO.Packaging;
 
 namespace Vigil
 {
@@ -67,6 +68,20 @@ namespace Vigil
       _vigilServices.ContextMenu.Items.Add("Resume Reminder", null, (sender, e) =>
       {
         _vigilServices.ReminderManager.Resume();
+      });
+      _vigilServices.ContextMenu.Items.Add("Reset Windows", null, (sender, e) =>
+      {
+        // Update main, reminder, and reminder debug window positions to zero
+        System.Windows.Point zp = new System.Windows.Point(0, 0);
+        _vigilServices.ConfigManager.UpdateConfig(cfg => {
+          cfg.MainWindowPosOne = zp;
+          cfg.MainWindowPosTwo = zp;
+          cfg.ReminderWindowPos = zp;
+          cfg.ReminderWindowPos = zp;
+        });
+        if (_vigilServices.MainWindow != null) { _vigilServices.MainWindow.SetPos(zp); }
+        if (_vigilServices.ReminderWindow != null) { _vigilServices.ReminderWindow.SetPos(zp); }
+        if (_vigilServices.ReminderDebugWindow != null) { _vigilServices.ReminderDebugWindow.SetPos(zp); }
       });
       _vigilServices.ContextMenu.Items.Add("Exit", null, (sender, e) =>
       {
