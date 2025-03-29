@@ -5,7 +5,7 @@ namespace Vigil.Views
 {
   public partial class SettingsWindow : VigilWindow
   {
-    public SettingsWindow(VigilServices services, TimeSpan updateInterval) : base(services, updateInterval){}
+    public SettingsWindow(VigilServices services, TimeSpan updateInterval) : base(services, updateInterval) { }
 
     public override void Init()
     {
@@ -23,7 +23,7 @@ namespace Vigil.Views
       EthUsageSensor.ItemsSource = sensorData;
     }
 
-    public override void Update(object? sender, EventArgs e){}
+    public override void Update(object? sender, EventArgs e) { }
 
     private void SetPosOne_Click(object sender, RoutedEventArgs e)
     {
@@ -52,7 +52,7 @@ namespace Vigil.Views
         switch (cb.Name)
         {
           case "CpuUsageSensor":
-            _services.ConfigManager.UpdateConfig(cfg => { cfg.CpuUsageSensor =  selectedSensor; });
+            _services.ConfigManager.UpdateConfig(cfg => { cfg.CpuUsageSensor = selectedSensor; });
             break;
           case "CpuTempSensor":
             _services.ConfigManager.UpdateConfig(cfg => { cfg.CpuTempSensor = selectedSensor; });
@@ -83,6 +83,26 @@ namespace Vigil.Views
     private void ExitButton_Click(object sender, RoutedEventArgs e)
     {
       System.Windows.Application.Current.Shutdown();
+    }
+
+    private void UpdateReminder_Click(object sender, RoutedEventArgs e)
+    {
+      if (_services == null) { Console.WriteLine("Error: main window services are null"); return; }
+
+      // update interval and duration
+      if (!int.TryParse(ReminderInterval.Text, out int intervalValue) || !int.TryParse(ReminderDuration.Text, out int durationValue))
+      {
+        Console.WriteLine("Error: could not parse interval or duration");
+        return;
+      }
+      _services.ReminderManager.Update(TimeSpan.FromMinutes(intervalValue), TimeSpan.FromSeconds(durationValue));
+
+      // update config
+      _services.ConfigManager.UpdateConfig(cfg =>
+      {
+        cfg.ReminderInterval = TimeSpan.FromMinutes(intervalValue);
+        cfg.ReminderDuration = TimeSpan.FromSeconds(durationValue);
+      });
     }
   }
 }

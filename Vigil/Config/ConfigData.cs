@@ -4,8 +4,6 @@ namespace Vigil.Config
   {
     public System.Windows.Point MainWindowPosOne { get; set; } = new System.Windows.Point(0, 0);
     public System.Windows.Point MainWindowPosTwo { get; set; } = new System.Windows.Point(0, 0);
-    public System.Windows.Point ReminderWindowPos { get; set; } = new System.Windows.Point(0, 0);
-    public System.Windows.Size ReminderWindowSize { get; set; } = new System.Windows.Size(200, 200);
     public TimeSpan ReminderInterval { get; set; } = new TimeSpan(0, 0, 10, 0, 0); // 10 minute default
     public TimeSpan ReminderDuration { get; set; } = new TimeSpan(0, 0, 0, 6, 0); // 6 second default
     public System.Windows.Media.Color CpuColor { get; set; } = System.Windows.Media.Color.FromArgb(255, 31, 144, 209);

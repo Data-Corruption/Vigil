@@ -1,6 +1,11 @@
 ﻿using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Controls;
+using System.Windows.Media.Animation;
+using System.Windows.Threading;
+using System.Windows;
+
+
 
 namespace Vigil.Views
 {
@@ -103,9 +108,12 @@ namespace Vigil.Views
 
       if (_services.SettingsWindow == null)
       {
-        if (_isPosOneSet) {
+        if (_isPosOneSet)
+        {
           SetPos(_services.ConfigManager.GetConfig().MainWindowPosOne);
-        } else {
+        }
+        else
+        {
           SetPos(_services.ConfigManager.GetConfig().MainWindowPosTwo);
         }
       }
@@ -143,5 +151,45 @@ namespace Vigil.Views
 
     public System.Windows.Point GetCurrentPosition() { return new System.Windows.Point(Left, Top); }
     public System.Windows.Size GetCurrentSize() { return new System.Windows.Size(Width, Height); }
+
+    private bool _isFlashing = false;
+    public void FlashBackground(TimeSpan totalDuration)
+    {
+      if (_isFlashing)
+      {
+        Console.WriteLine("Already flashing background, ignoring request.");
+        return;
+      }
+      _isFlashing = true;
+
+      Console.WriteLine("Flashing background");
+
+      var brush = new SolidColorBrush(Colors.Transparent);
+      RootGrid.Background = brush;
+
+      // Configure the animation to alternate between transparent and green.
+      var animation = new ColorAnimation
+      {
+        From = Colors.Transparent,
+        To = Colors.Green,
+        AutoReverse = true,
+        RepeatBehavior = RepeatBehavior.Forever,
+        Duration = new Duration(TimeSpan.FromMilliseconds(500))
+      };
+
+      // Start the animation.
+      brush.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+
+      // Use a DispatcherTimer to stop the animation after the specified total duration.
+      var timer = new DispatcherTimer { Interval = totalDuration };
+      timer.Tick += (sender, args) =>
+      {
+        timer.Stop();
+        brush.BeginAnimation(SolidColorBrush.ColorProperty, null);
+        brush.Color = Colors.Transparent;
+        _isFlashing = false;
+      };
+      timer.Start();
+    }
   }
 }

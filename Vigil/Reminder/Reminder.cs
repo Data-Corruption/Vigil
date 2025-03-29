@@ -1,6 +1,4 @@
 using System.Timers;
-using System.Windows;
-using Vigil.Views;
 
 namespace Vigil.Reminder
 {
@@ -29,31 +27,31 @@ namespace Vigil.Reminder
       _isDebug = false;
     }
 
-    private async void OnTimedEvent(Object? source, ElapsedEventArgs e)
+    private void OnTimedEvent(Object? source, ElapsedEventArgs e)
     {
       lock (_lock)
       {
         if (_services == null) { Console.WriteLine("Error: ReminderManager services are null"); return; }
         _nextRun = DateTime.Now.AddMilliseconds(_interval);
-        _services.ReminderWindow?.Dispatcher.Invoke(() => _services.ReminderWindow.Show());
-      }
-      await Task.Delay(_duration);
-      lock (_lock)
-      {
-        if (_services == null) { Console.WriteLine("Error: ReminderManager services are null"); return; }
-        if (!_isDebug)
+        var flashDuration = TimeSpan.FromMilliseconds(_duration);
+        _services.MainWindow?.Dispatcher.BeginInvoke(new Action(() =>
         {
-          _services.ReminderWindow?.Dispatcher.Invoke(() => _services.ReminderWindow.Hide());
-        }
+          _services.MainWindow.FlashBackground(flashDuration);
+        }));
       }
     }
 
-    // returns string in format "20m" "5m" etc
+    // Returns string in format "20m", "5m", or "30s" if under a minute
     public string GetTimeUntilNextRun()
     {
       lock (_lock)
       {
-        return (_nextRun - DateTime.Now).ToString(@"m\m");
+        var timeUntilNextRun = _nextRun - DateTime.Now;
+        if (timeUntilNextRun.TotalMinutes < 1)
+        {
+          return timeUntilNextRun.ToString(@"s\s");
+        }
+        return timeUntilNextRun.ToString(@"m\m");
       }
     }
 
@@ -64,32 +62,7 @@ namespace Vigil.Reminder
         _interval = interval.TotalMilliseconds;
         _duration = (int)duration.TotalMilliseconds;
         _timer.Interval = _interval;
-      }
-    }
-
-    public void DebugOn()
-    {
-      lock (_lock)
-      {
-        if (_services == null) { Console.WriteLine("Error: ReminderManager services are null"); return; }
-        Pause();
-        _isDebug = true;
-        _services.ReminderDebugWindow?.Dispatcher.Invoke(() => {
-          _services.ReminderDebugWindow.Show();
-          });
-      }
-    }
-
-    public void DebugOff()
-    {
-      lock (_lock)
-      {
-        if (_services == null) { Console.WriteLine("Error: ReminderManager services are null"); return; }
-        _isDebug = false;
-        _services.ReminderDebugWindow?.Dispatcher.Invoke(() => {
-          _services.ReminderDebugWindow.Hide();
-          });
-        Resume();
+        _nextRun = DateTime.Now.AddMilliseconds(_interval); // Reset the next run time
       }
     }
 

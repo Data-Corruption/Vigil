@@ -78,8 +78,32 @@ namespace Vigil.Views
       // Adjust position to device pixels
       int deviceX = (int)(wpfPos.X * scalingFactorX);
       int deviceY = (int)(wpfPos.Y * scalingFactorY);
-      
+
       SetWindowPos(source.Handle, IntPtr.Zero, deviceX, deviceY, 0, 0, SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
+    }
+
+    [DllImport("user32.dll")]
+    private static extern int GetWindowLong(IntPtr hwnd, int index);
+
+    [DllImport("user32.dll")]
+    private static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
+
+    private const int GWL_EXSTYLE = -20;
+    private const int WS_EX_TRANSPARENT = 0x20;
+
+    public void MakeClickThrough()
+    {
+      try
+      {
+        var source = (HwndSource)PresentationSource.FromVisual(this);
+        if (source == null) return;
+        int extendedStyle = GetWindowLong(source.Handle, GWL_EXSTYLE);
+        SetWindowLong(source.Handle, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine($"Error setting WS_EX_TRANSPARENT: {ex.Message}");
+      }
     }
   }
 }

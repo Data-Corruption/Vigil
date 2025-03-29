@@ -11,6 +11,7 @@
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
 
@@ -36,6 +37,18 @@
     </StackPanel>
 
     <StackPanel Grid.Row="2" Margin="0,10,0,0">
+      <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+      <Label Content="Reminder Interval (minutes):" Width="200"/>
+      <TextBox Width="200" Name="ReminderInterval"/>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+      <Label Content="Reminder Duration (seconds):" Width="200"/>
+      <TextBox Width="200" Name="ReminderDuration"/>
+      </StackPanel>
+      <Button Content="Update Reminder" Width="150" Height="30" Click="UpdateReminder_Click"/>
+    </StackPanel>
+
+    <StackPanel Grid.Row="3" Margin="0,10,0,0">
       <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
       <Label Content="CPU Usage:" Width="150"/>
       <ComboBox Width="200" x:Name="CpuUsageSensor" SelectionChanged="SelectionChanged"/>
@@ -70,7 +83,7 @@
       </StackPanel>
     </StackPanel>
 
-    <TextBox Grid.Row="3"
+    <TextBox Grid.Row="4"
              Name="AllSensorData"
              IsReadOnly="True"
              TextWrapping="Wrap"
