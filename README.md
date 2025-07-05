@@ -26,7 +26,7 @@ Vigil is a tiny lightweight system hardware monitor for Windows.
     dotnet publish -c Release -r win-x64 --self-contained false
     ```
 
-3. Set `Command` in the `VigilStartupTask.xml` to the path of the exe file in `Vigil\bin\Release\net8.0-windows\win-x64`
+3. Set `Command` in the `VigilTask.xml` to the full path of the .exe file in `Vigil\bin\Release\net8.0-windows\win-x64`
 4. Register the startup task
 
     ```shell
