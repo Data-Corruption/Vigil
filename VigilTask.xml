@@ -34,7 +34,7 @@
   </Settings>
   <Actions Context="Author">
     <Exec>
-      <Command>C:\example\replace_me\rawrXD\uwu\owo.exe</Command>
+      <Command>C:\Code\Vigil\Vigil\bin\Release\net8.0-windows\win-x64\Vigil.exe</Command>
     </Exec>
   </Actions>
 </Task>
